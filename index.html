@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OSM + Free GPS Demo</title>
+  <meta charset="utf-8" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // Initialize map
+  const map = L.map("map").setView([0, 0], 15);
+
+  // OpenStreetMap tiles (FREE)
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors"
+  }).addTo(map);
+
+  // Get GPS location (FREE)
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        // Move map to user location
+        map.setView([lat, lng], 16);
+
+        // Add marker
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup("You are here 🚗")
+          .openPopup();
+      },
+      () => {
+        alert("GPS permission denied");
+      }
+    );
+  } else {
+    alert("GPS not supported on this device");
+  }
+</script>
+
+</body>
+</html>
